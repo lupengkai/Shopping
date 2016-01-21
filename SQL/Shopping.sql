@@ -3,7 +3,7 @@ create database shopping;
 
 use shopping;
 
-create table user 
+create table ruser
 (
 id int primary key auto_increment,
 username varchar(40),
@@ -19,7 +19,7 @@ id int primary key auto_increment,
 pid int, #pid为0的是最顶层节点
 name varchar(255), 
 descr varchar(255),
-cno int, #最多三层, 每层占两位, 最多99个子节点
+isleaf int,
 grade int #代表级别, 从1开始
 );
 

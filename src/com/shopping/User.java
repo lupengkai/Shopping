@@ -2,11 +2,10 @@ package com.shopping;
 
 import com.shopping.util.DB;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by tage on 1/17/16.
@@ -17,7 +16,7 @@ public class User {
     private String password;
     private String phone;
     private String addr;
-    private Date rdate;
+    private Timestamp rdate;
 
 
     public int getId() {
@@ -64,27 +63,61 @@ public class User {
         return rdate;
     }
 
-    public void setRdate(Date rdate) {
+    public void setRdate(Timestamp rdate) {
         this.rdate = rdate;
     }
 
     public void save() {
-        Connection conn = DB.getConnection();
-        String sql = "insert into user value ( null, ?, ?, ?, ?, ?); ";
+        Connection conn = null;
+        PreparedStatement pStmt = null;
+        conn = DB.getConn();
+        String sql = "insert into ruser values ( null, ?, ?, ?, ?, ?); ";
 
-        PreparedStatement pStmt = DB.prepStmt(conn, sql);
+        pStmt = DB.prepStmt(conn, sql);
 
         try {
             pStmt.setString(1, username);
             pStmt.setString(2, password);
             pStmt.setString(3, phone);
             pStmt.setString(4, addr);
-            pStmt.setTimestamp(5, new Timestamp(rdate.getTime()));
-            pStmt.execute();
+            pStmt.setTimestamp(5, rdate);
+            pStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DB.closeStmt(pStmt);
+            DB.closeConn(conn);
         }
 
 
+    }
+
+    public static List<User> getUsers() {
+        List<User> list = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "select * from ruser";
+            rs = DB.executeQuery(conn,sql);
+            while (rs.next()) {
+                User u = new User();
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddr(rs.getString("addr"));
+                u.setRdate(new Timestamp(System.currentTimeMillis()));
+                list.add(u);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+        return list;
     }
 }

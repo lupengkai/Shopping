@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=GBK" language="java" pageEncoding="GBK"  import="com.shopping.*" %>
 <%@ page import="com.shopping.util.DB" %>
+<%@ page import="java.sql.Timestamp" %>
 <%
     request.setCharacterEncoding("GBK");
     String action = request.getParameter("action");
@@ -20,7 +21,7 @@
         u.setPassword(password);
         u.setPhone(phone);
         u.setAddr(addr);
-        u.setRdate(new java.util.Date(System.currentTimeMillis()));
+        u.setRdate(new Timestamp(System.currentTimeMillis()));
         u.save();
         out.print("test");
 %>

@@ -19,7 +19,7 @@ public class DB {
 
     ;
 
-    public static Connection getConnection() {
+    public static Connection getConn() {
         Connection coon = null;
         try {
             coon = DriverManager.getConnection("jdbc:mysql://localhost:3306/shopping?user=root&password=0715");
@@ -30,7 +30,7 @@ public class DB {
 
     }
 
-    public static void closeConnection(Connection coon) {
+    public static void closeConn(Connection coon) {
         if (coon != null) {
             try {
                 coon.close();
@@ -72,17 +72,6 @@ public class DB {
         return pStmt;
     }
 
-    public static void closePStmt(PreparedStatement pStmt) {
-        if (pStmt != null) {
-            try {
-                pStmt.close();
-                pStmt = null;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 
     public static ResultSet executeQuery(Statement stmt, String sql) {
         ResultSet rs = null;
@@ -94,7 +83,18 @@ public class DB {
         return  rs;
     }
 
-    public static void closeResultSet(ResultSet rs) {
+
+    public static ResultSet executeQuery(Connection conn, String sql) {
+        ResultSet rs = null;
+        try {
+            rs = conn.createStatement().executeQuery(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public static void closeRs(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
@@ -107,7 +107,7 @@ public class DB {
     }
 
     public static void main(String args[]) {
-        Statement stmt = DB.getStmt(DB.getConnection());
+        Statement stmt = DB.getStmt(DB.getConn());
         String sql = "select * from user";
         ResultSet rs = DB.executeQuery(stmt, sql);
 
