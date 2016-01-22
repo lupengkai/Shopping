@@ -1,6 +1,7 @@
 package com.shopping;
 
 import com.shopping.util.DB;
+import com.sun.xml.internal.bind.v2.TODO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -103,6 +104,7 @@ public class User {
             rs = DB.executeQuery(conn,sql);
             while (rs.next()) {
                 User u = new User();
+                u.setId(rs.getInt("id"));
                 u.setUsername(rs.getString("username"));
                 u.setPassword(rs.getString("password"));
                 u.setPhone(rs.getString("phone"));
@@ -119,5 +121,24 @@ public class User {
         }
 
         return list;
+    }
+
+    public static void deleteUser(int id) {
+        Connection conn = null;
+        Statement stmt = null;
+
+        try {
+            conn = DB.getConn();
+            stmt = DB.getStmt(conn);
+            stmt.executeUpdate("DELETE FROM ruser WHERE id = " + id);
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeStmt(stmt);
+            DB.closeConn(conn);
+        }
     }
 }

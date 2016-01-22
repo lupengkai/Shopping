@@ -12,7 +12,7 @@
       <table id="3" parent="1" name="product"/>
       <table id="4" parent="1" name="salesitem"/>
       <table id="5" parent="1" name="salesorder"/>
-      <table id="6" parent="1" name="user"/>
+      <table id="6" parent="1" name="ruser"/>
       <column id="7" parent="2" name="id">
         <mandatory>1</mandatory>
         <data-type>int(11)</data-type>
@@ -26,7 +26,7 @@
       <column id="10" parent="2" name="descr">
         <data-type>varchar(255)</data-type>
       </column>
-      <column id="11" parent="2" name="cno">
+      <column id="11" parent="2" name="isleaf">
         <data-type>int(11)</data-type>
       </column>
       <column id="12" parent="2" name="grade">

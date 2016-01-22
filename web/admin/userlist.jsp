@@ -24,7 +24,7 @@
         <td>Phone</td>
         <td>Addr</td>
         <td>Rdate</td>
-        <td></td>
+        <td>²Ù×÷</td>
     </tr>
     <%
         for (Iterator<User> it = users.iterator(); it.hasNext(); ) {
@@ -37,7 +37,7 @@
         <td><%=u.getPhone()%></td>
         <td><%=u.getAddr()%></td>
         <td><%=u.getRdate()%></td>
-        <td></td>
+        <td><a href="userdelete.jsp?id=<%=u.getId()%>" target="detail">É¾</a> </td>
     </tr>
 
     <%
