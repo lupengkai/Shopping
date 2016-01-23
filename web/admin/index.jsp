@@ -1,3 +1,4 @@
+<%@include file="_sessioncheck.jsp"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>

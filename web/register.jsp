@@ -39,7 +39,7 @@
 </head>
 <body>
 
-<form name="form" action="register.jsp" method="get" onSubmit="return checkdata()">
+<form name="form" action="register.jsp" method="post" onSubmit="return checkdata()">
     <input type="hidden" name="action" value="register">
     <table width="750" border="2">
         <caption>ÓÃ»§×¢²á</caption>

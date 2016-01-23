@@ -8,6 +8,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=GBK" language="java" pageEncoding="GBK" %>
+<%@include file="_sessioncheck.jsp"%>
 <%
     List users = User.getUsers();
 %>
