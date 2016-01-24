@@ -72,7 +72,7 @@ public class User {
         Connection conn = null;
         PreparedStatement pStmt = null;
         conn = DB.getConn();
-        String sql = "insert into ruser values ( null, ?, ?, ?, ?, ?); ";
+        String sql = "insert into ruser values ( null, ?, ?, ?, ?, ?)";
 
         pStmt = DB.prepStmt(conn, sql);
 
@@ -101,7 +101,7 @@ public class User {
         try {
             conn = DB.getConn();
             String sql = "select * from ruser";
-            rs = DB.executeQuery(conn,sql);
+            rs = DB.executeQuery(conn, sql);
             while (rs.next()) {
                 User u = new User();
                 u.setId(rs.getInt("id"));
@@ -109,7 +109,7 @@ public class User {
                 u.setPassword(rs.getString("password"));
                 u.setPhone(rs.getString("phone"));
                 u.setAddr(rs.getString("addr"));
-                u.setRdate(new Timestamp(System.currentTimeMillis()));
+                u.setRdate(rs.getTimestamp("rdate"));
                 list.add(u);
             }
 
@@ -133,7 +133,6 @@ public class User {
             stmt.executeUpdate("DELETE FROM ruser WHERE id = " + id);
 
 
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -141,4 +140,61 @@ public class User {
             DB.closeConn(conn);
         }
     }
+
+    public static User validate(String username, String password) throws UserNotFoundException, PasswordNotCorrectException {
+        Connection conn = null;
+        ResultSet rs = null;
+        User u = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "select * from ruser where username = '" + username + "'";
+            rs = DB.executeQuery(conn, sql);
+            if (!rs.next()) {
+                throw new UserNotFoundException();
+            } else if (!rs.getString("password").equals(password)) {
+                throw new PasswordNotCorrectException();
+            } else {
+                u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddr(rs.getString("addr"));
+                u.setRdate(rs.getTimestamp("rdate"));
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+        return u;
+
+    }
+
+    public void update() {
+        Connection conn = null;
+        PreparedStatement pStmt = null;
+        conn = DB.getConn();
+        String sql = "update ruser set username = ?, phone = ?, addr = ? where id = " + this.getId();
+
+        pStmt = DB.prepStmt(conn, sql);
+
+        try {
+            pStmt.setString(1, username);
+            pStmt.setString(2, phone);
+            pStmt.setString(3, addr);
+            pStmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeStmt(pStmt);
+            DB.closeConn(conn);
+        }
+
+
+    }
+
 }
