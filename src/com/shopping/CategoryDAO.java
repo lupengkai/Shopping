@@ -13,12 +13,15 @@ public class CategoryDAO {
         PreparedStatement pStmt = null;
         try {
             conn = DB.getConn();
-            String sql = "insert into category values (?, ?, ?, ?, ?)";
+            String sql = null;
+            if (c.getId() == -1) {
+                sql = "insert into category values (null, ?, ?, ?, ?, ?)";
+            } else sql = "INSERT INTO category VALUES ( " + c.getId() + ", ?, ?, ?, ?, ?)";
             pStmt = conn.prepareStatement(sql);
-            pStmt.setInt(1, c.getId());
+            pStmt.setInt(1, c.getPid());
             pStmt.setString(2, c.getName());
-            pStmt.setString(3,c.getDescr());
-            pStmt.setInt(4,c.isLeaf()? 0:1);
+            pStmt.setString(3, c.getDescr());
+            pStmt.setInt(4, c.isLeaf() ? 0 : 1);
             pStmt.setInt(5, c.getGrade());
             pStmt.executeUpdate();
         } catch (SQLException e) {

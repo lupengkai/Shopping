@@ -58,4 +58,19 @@ public class Category {
     public void setGrade(int grade) {
         this.grade = grade;
     }
+
+    public static void add(Category c) {
+        CategoryDAO.save(c);
+    }
+
+    public static void addTopCategory(String name, String descr) {
+        Category c = new Category();
+        c.setId(-1);
+        c.setName(name);
+        c.setDescr(descr);
+        c.setPid(0);
+        c.setLeaf(true);
+        c.setGrade(1);
+        add(c);
+    }
 }
