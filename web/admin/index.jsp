@@ -10,5 +10,6 @@
 <a href="userlist.jsp">用户列表</a>
 <a href="userdelete.jsp">删除用户</a>
 <a href="categoryadd.jsp">添加目录</a>
+<a href="categorylist.jsp">目录列表</a>
 </body>
 </html>

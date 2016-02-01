@@ -1,5 +1,8 @@
 package com.shopping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tage on 1/25/16.
  */
@@ -72,5 +75,23 @@ public class Category {
         c.setLeaf(true);
         c.setGrade(1);
         add(c);
+    }
+
+    public static List<Category> getAllCategories() {
+        List<Category> list = new ArrayList<>();
+        CategoryDAO.getCategories(list, 0);
+        return list;
+
+    }
+
+    public static void addChildCategory(String name, String descr, int pid) {
+        Category c = new Category();
+        c.setId(-1);
+        c.setName(name);
+        c.setDescr(descr);
+        c.setPid(pid);
+        c.setGrade(CategoryDAO.getGrade(pid) + 1);
+
+        CategoryDAO.addChild(c);
     }
 }

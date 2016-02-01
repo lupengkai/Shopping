@@ -8,11 +8,20 @@
 <%@ page contentType="text/html;charset=GBK" language="java" pageEncoding="GBK" %>
 <%
     request.setCharacterEncoding("GBK");
-    String action =request.getParameter("action");
+    String strPid = request.getParameter("pid");
+    int pid = 0;
+    if (strPid != null && !strPid.trim().equals("")) {
+        pid = Integer.parseInt(strPid);
+    }
+    String action = request.getParameter("action");
     if (action != null && action.equals("add")) {
         String name = request.getParameter("name");
         String descr = request.getParameter("descr");
-        Category.addTopCategory(name, descr);
+        if (pid == 0) {
+            Category.addTopCategory(name, descr);
+        } else {
+            Category.addChildCategory(name, descr, pid);
+        }
         out.println("Congraduations! Add category OK!");
     }
 %>
@@ -22,9 +31,10 @@
     <title></title>
 </head>
 <body>
-<center>添加根类别</center>
+<center>添加类别</center>
 <form name="form" action="categoryadd.jsp" method="post">
     <input type="hidden" name="action" value="add">
+    <input type="hidden" name="pid" value="<%=pid%>">
     <table border="1">
         <tr>
             <td>类别名称：</td>
