@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=GBK" language="java" pageEncoding="GBK" %>
+<%@include file="_sessioncheck.jsp" %>
 <%
     request.setCharacterEncoding("GBK");
     String strPid = request.getParameter("pid");
@@ -20,7 +21,13 @@
         if (pid == 0) {
             Category.addTopCategory(name, descr);
         } else {
-            Category.addChildCategory(name, descr, pid);
+            //Category.addChildCategory(name, descr, pid);
+            Category cParent = Category.loadById(pid);
+            Category cChild = new Category();
+            cChild.setId(-1);
+            cChild.setName(name);
+            cChild.setDescr(descr);
+            cParent.addChild(cChild);
         }
         out.println("Congraduations! Add category OK!");
     }

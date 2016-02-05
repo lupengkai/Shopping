@@ -62,6 +62,10 @@ public class Category {
         this.grade = grade;
     }
 
+    public void addChild(Category c) {
+        addChildCategory(c.getName(), c.getDescr(), id);
+    }
+
     public static void add(Category c) {
         CategoryDAO.save(c);
     }
@@ -93,5 +97,9 @@ public class Category {
         c.setGrade(CategoryDAO.getGrade(pid) + 1);
 
         CategoryDAO.addChild(c);
+    }
+
+    public static Category loadById(int id) {
+        return CategoryDAO.loadById(id);
     }
 }

@@ -119,4 +119,33 @@ public class CategoryDAO {
             DB.closeConn(conn);
         }
     }
+
+    public static Category loadById(int id) {
+        Connection conn = null;
+        ResultSet rs = null;
+        Category c = null;
+        try {
+            conn = DB.getConn();
+            String sql = "SELECT * from category WHERE id = " + id;
+            rs = DB.executeQuery(conn, sql);
+            if (rs.next()) {
+                c = new Category();
+                c.setId(rs.getInt("id"));
+                c.setName(rs.getString("name"));
+                c.setPid(rs.getInt("pid"));
+                c.setDescr(rs.getString("descr"));
+                c.setLeaf(rs.getInt("isleaf") == 0 ? true : false);
+                c.setGrade(rs.getInt("grade"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+        return c;
+
+    }
+
 }
