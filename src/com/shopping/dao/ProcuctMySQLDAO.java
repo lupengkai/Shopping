@@ -5,7 +5,9 @@ import com.shopping.util.DB;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,12 +16,107 @@ import java.util.List;
  */
 public class ProcuctMySQLDAO implements ProductDAO {
     public List<Product> getProducts() {
-        return null;
+        List<Product> list = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "select * from product";
+            rs = DB.executeQuery(conn, sql);
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescr(rs.getString("descr"));
+                p.setNormalPrice(rs.getDouble("normalprice"));
+                p.setMemberPrice(rs.getDouble("memberprice"));
+                p.setPdate(rs.getTimestamp("pdate"));
+                p.setCategoryId(rs.getInt("categoryid"));
+
+                list.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+        return list;
     }
 
     public List<Product> getProducts(int pageNo, int pageSize) {
-        return null;
+        List<Product> list = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "select * from product limit " + (pageNo - 1) * pageSize + " , " + pageSize;
+            rs = DB.executeQuery(conn, sql);
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescr(rs.getString("descr"));
+                p.setNormalPrice(rs.getDouble("normalprice"));
+                p.setMemberPrice(rs.getDouble("memberprice"));
+                p.setPdate(rs.getTimestamp("pdate"));
+                p.setCategoryId(rs.getInt("categoryid"));
+
+                list.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+        return list;
     }
+
+    @Override
+    public int getProducts(List<Product> products, int pageNo, int pageSize) {
+        Connection conn = null;
+        ResultSet rsCount = null;
+        ResultSet rs = null;
+        int pageCount = 0;
+
+        try {
+            conn = DB.getConn();
+            rsCount = DB.executeQuery(conn, "select count(*) from product");
+            rsCount.next();
+            pageCount = (rsCount.getInt(1) + pageSize - 1) / pageSize;
+            String sql = "select * from product limit " + (pageNo - 1) * pageSize + " , " + pageSize;
+            rs = DB.executeQuery(conn, sql);
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescr(rs.getString("descr"));
+                p.setNormalPrice(rs.getDouble("normalprice"));
+                p.setMemberPrice(rs.getDouble("memberprice"));
+                p.setPdate(rs.getTimestamp("pdate"));
+                p.setCategoryId(rs.getInt("categoryid"));
+
+                products.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeRs(rsCount);
+            DB.closeConn(conn);
+        }
+
+        return pageCount;
+    }
+
 
     public List<Product> findProducts(int[] catagoryID,
                                       String name,
@@ -77,3 +174,5 @@ public class ProcuctMySQLDAO implements ProductDAO {
         return true;
     }
 }
+
+

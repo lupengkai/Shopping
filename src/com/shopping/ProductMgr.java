@@ -39,7 +39,11 @@ public class ProductMgr {
     }
 
     public List<Product> getProducts(int pageNo, int pageSize) {
-        return null;
+        return dao.getProducts(pageNo, pageSize);
+    }
+
+    public int getProducts(List<Product> products, int pageNo, int pageSize) {
+        return dao.getProducts(products, pageNo, pageSize);
     }
 
     public List<Product> findProducts(int[] catagoryID,
