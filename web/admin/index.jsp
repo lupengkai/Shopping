@@ -13,5 +13,6 @@
 <a href="categorylist.jsp">目录列表</a>
 <a href="productadd.jsp">添加产品</a>
 <a href="productlist.jsp">产品列表</a>
+<a href="productsearch.jsp">产品搜索</a>
 </body>
 </html>

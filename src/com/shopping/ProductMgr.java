@@ -47,8 +47,7 @@ public class ProductMgr {
     }
 
     public List<Product> findProducts(int[] catagoryID,
-                                      String name,
-                                      String descr,
+                                      String keyWord,
                                       double lowNormalPrice,
                                       double highNormalPrice,
                                       double lowMemberPrice,

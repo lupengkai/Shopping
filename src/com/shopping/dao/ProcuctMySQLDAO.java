@@ -119,17 +119,41 @@ public class ProcuctMySQLDAO implements ProductDAO {
 
 
     public List<Product> findProducts(int[] catagoryID,
-                                      String name,
-                                      String descr,
+                                      String keyWord,
                                       double lowNormalPrice,
                                       double highNormalPrice,
                                       double lowMemberPrice,
+                                      double highMemberPrice,
                                       Date startDate,
                                       Date endDate,
                                       int pageNO,
                                       int pageSize
     ) {
-        return null;
+        Connection conn = null;
+        ResultSet rs = null;
+        List<Product> list = new ArrayList<>();
+        try {
+            conn = DB.getConn();
+            String sql = "select * from product where 1=1 ";
+            String strID = "";
+            if (catagoryID.length > 0) {
+                strID += "(";
+                for (int i = 0; i < catagoryID.length; i++) {
+                    if (i < catagoryID.length - 1) {
+                        strID += catagoryID[i] + ",";
+                    } else
+                        strID += catagoryID[i];
+                }
+                strID += ") ";
+                sql += " and categoryid in " + strID;
+            }
+
+            if (keyWord != null && !keyWord.equals("")) {
+                sql += " and name like '%" + keyWord + "%' or desc like '%" + keyWord + "%'";
+            }
+            //TODO
+
+        }
     }
 
     public List<Product> findProducts(String name) {
