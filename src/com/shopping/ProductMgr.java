@@ -51,12 +51,13 @@ public class ProductMgr {
                                       double lowNormalPrice,
                                       double highNormalPrice,
                                       double lowMemberPrice,
+                                      double highMemberPrice,
                                       Date startDate,
                                       Date endDate,
                                       int pageNO,
                                       int pageSize
     ) {
-        return null;
+        return dao.findProducts(catagoryID, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, pageNO, pageSize);
     }
 
     public List<Product> findProducts(String name) {

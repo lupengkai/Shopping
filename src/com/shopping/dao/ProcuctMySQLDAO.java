@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -149,13 +150,61 @@ public class ProcuctMySQLDAO implements ProductDAO {
             }
 
             if (keyWord != null && !keyWord.equals("")) {
-                sql += " and name like '%" + keyWord + "%' or desc like '%" + keyWord + "%'";
+                sql += " and (name like '%" + keyWord + "%' or descr like '%" + keyWord + "%') ";
             }
-            //TODO
 
+            if (lowNormalPrice >= 0) {
+                sql += "and normalprice > " + lowNormalPrice;
+            }
+
+            if (highNormalPrice > 0) {
+                sql += "and normalprice < " + highNormalPrice;
+            }
+
+            if (lowMemberPrice >= 0) {
+                sql += "and memberprice > " + lowMemberPrice;
+            }
+
+            if (highMemberPrice > 0) {
+                sql += "and memberprice < " + highMemberPrice;
+            }
+
+            if (startDate != null) {
+                sql += "and pdate >= '" + new SimpleDateFormat("yyyy-MM-dd").format(startDate) + "'";
+            }
+
+            if (endDate != null) {
+                sql += "and pdate <= '" + new SimpleDateFormat("yyyy-MM-dd").format(startDate) + "'";
+            }
+
+            sql += "limit " + (pageNO - 1) * pageSize + " , " + pageSize;
+            System.out.println(sql);
+            rs = DB.executeQuery(conn, sql);
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescr(rs.getString("descr"));
+                p.setNormalPrice(rs.getDouble("normalprice"));
+                p.setMemberPrice(rs.getDouble("memberprice"));
+                p.setPdate(rs.getTimestamp("pdate"));
+                p.setCategoryId(rs.getInt("categoryid"));
+
+                list.add(p);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
         }
+
+        return list;
     }
 
+    @Override
     public List<Product> findProducts(String name) {
         return null;
     }
