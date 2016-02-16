@@ -3,6 +3,7 @@ package com.shopping;
 import com.shopping.dao.ProcuctMySQLDAO;
 import com.shopping.dao.ProductDAO;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -46,22 +47,18 @@ public class ProductMgr {
         return dao.getProducts(products, pageNo, pageSize);
     }
 
-    public List<Product> findProducts(int[] catagoryID,
-                                      String keyWord,
-                                      double lowNormalPrice,
-                                      double highNormalPrice,
-                                      double lowMemberPrice,
-                                      double highMemberPrice,
-                                      Date startDate,
-                                      Date endDate,
-                                      int pageNO,
-                                      int pageSize
+    public int findProducts(List<Product> list, int[] catagoryID,
+                            String keyWord,
+                            double lowNormalPrice,
+                            double highNormalPrice,
+                            double lowMemberPrice,
+                            double highMemberPrice,
+                            Date startDate,
+                            Date endDate,
+                            int pageNO,
+                            int pageSize
     ) {
-        return dao.findProducts(catagoryID, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, pageNO, pageSize);
-    }
-
-    public List<Product> findProducts(String name) {
-        return null;
+        return dao.findProducts(list, catagoryID, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, pageNO, pageSize);
     }
 
     public boolean deleteProductByCategoryId(int categoryId) {

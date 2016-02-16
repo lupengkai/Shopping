@@ -13,16 +13,16 @@ public interface ProductDAO {
 
     public List<Product> getProducts(int pageNo, int pageSize);
 
-    public List<Product> findProducts(int[] catagoryID,
-                                      String keyWord,
-                                      double lowNormalPrice,
-                                      double highNormalPrice,
-                                      double lowMemberPrice,
-                                      double highMemberPrice,
-                                      Date startDate,
-                                      Date endDate,
-                                      int pageNO,
-                                      int pageSize
+    public int findProducts(List<Product> list, int[] catagoryID,
+                            String keyWord,
+                            double lowNormalPrice,
+                            double highNormalPrice,
+                            double lowMemberPrice,
+                            double highMemberPrice,
+                            Date startDate,
+                            Date endDate,
+                            int pageNO,
+                            int pageSize
     );
 
     public List<Product> findProducts(String name);

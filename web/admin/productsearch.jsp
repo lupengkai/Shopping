@@ -4,6 +4,7 @@
 <%@ page import="java.sql.Timestamp" %>
 <%@ page import="com.shopping.Product" %>
 <%@ page import="com.shopping.ProductMgr" %>
+<%@ page import="java.util.ArrayList" %>
 <%--
   Created by IntelliJ IDEA.
   User: tage
@@ -18,6 +19,11 @@
 
     String action = request.getParameter("action");
     if (action != null && action.equals("complexsearch")) {
+        int pageNo = 1;
+        String strPageNo = request.getParameter("pageno");
+        if (strPageNo != null && !strPageNo.trim().equals("")) {
+            pageNo = Integer.parseInt(strPageNo);
+        }
         String keyWord = request.getParameter("keyword");
         Double lowNormalPrice = Double.parseDouble(request.getParameter("lownormalprice"));
         Double highNormalPrice = Double.parseDouble(request.getParameter("highnormalprice"));
@@ -51,8 +57,9 @@
             idArray = new int[1];
             idArray[0] = categoryID;
         }
+        List<Product> products = new ArrayList<>();
 
-        List<Product> products = ProductMgr.getInstance().findProducts(idArray, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, 1, 3);
+        int pageCount = ProductMgr.getInstance().findProducts(products, idArray, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, pageNo, 3);
         out.println(products.size());
 
 %>
@@ -92,9 +99,14 @@
     %>
 
 </table>
+<center>
+    共<%=pageCount%>页
+    &nbsp;
+    <a href="productsearch.jsp?action=<%=action%>&categoryid=<%=categoryID%>&keyword=<%=keyWord%>&lownormalprice=<%=lowNormalPrice%>&highnormalprice=<%=highNormalPrice%>&lowmemberprice=<%=lowMemberPrice%>&highmemberprice=<%=highMemberPrice%>&startdate=<%=strStartDate%>&enddate=<%=strEndDate%>&pageno=<%=pageNo+1%>">下一页</a>
+</center>
 
 <%
-        return;
+
     }
 %>
 <html>
@@ -152,6 +164,7 @@
             <td>category:</td>
             <td>
                 <select name="categoryid">
+                    <option value="0">所有类别</option>
                     <%
                         for (Iterator<Category> it = categories.iterator(); it.hasNext(); ) {
                             Category c = it.next();

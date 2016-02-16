@@ -119,25 +119,27 @@ public class ProcuctMySQLDAO implements ProductDAO {
     }
 
 
-    public List<Product> findProducts(int[] catagoryID,
-                                      String keyWord,
-                                      double lowNormalPrice,
-                                      double highNormalPrice,
-                                      double lowMemberPrice,
-                                      double highMemberPrice,
-                                      Date startDate,
-                                      Date endDate,
-                                      int pageNO,
-                                      int pageSize
+    public int findProducts(List<Product> list, int[] catagoryID,
+                            String keyWord,
+                            double lowNormalPrice,
+                            double highNormalPrice,
+                            double lowMemberPrice,
+                            double highMemberPrice,
+                            Date startDate,
+                            Date endDate,
+                            int pageNO,
+                            int pageSize
     ) {
         Connection conn = null;
         ResultSet rs = null;
-        List<Product> list = new ArrayList<>();
+        ResultSet rsCount = null;
+        int pageCount = 0;
         try {
             conn = DB.getConn();
+            String countSql = "";
             String sql = "select * from product where 1=1 ";
             String strID = "";
-            if (catagoryID.length > 0) {
+            if (catagoryID != null && catagoryID.length > 0) {
                 strID += "(";
                 for (int i = 0; i < catagoryID.length; i++) {
                     if (i < catagoryID.length - 1) {
@@ -176,7 +178,11 @@ public class ProcuctMySQLDAO implements ProductDAO {
             if (endDate != null) {
                 sql += "and pdate <= '" + new SimpleDateFormat("yyyy-MM-dd").format(startDate) + "'";
             }
-
+            countSql = sql.replaceFirst("select \\*", "select count(*) ");
+            System.out.println(countSql);
+            rsCount = DB.executeQuery(conn, countSql);
+            rsCount.next();
+            pageCount = (rsCount.getInt(1) + pageSize - 1) / pageSize;
             sql += "limit " + (pageNO - 1) * pageSize + " , " + pageSize;
             System.out.println(sql);
             rs = DB.executeQuery(conn, sql);
@@ -198,10 +204,11 @@ public class ProcuctMySQLDAO implements ProductDAO {
             e.printStackTrace();
         } finally {
             DB.closeRs(rs);
+            DB.closeRs(rsCount);
             DB.closeConn(conn);
         }
 
-        return list;
+        return pageCount;
     }
 
     @Override
