@@ -40,7 +40,19 @@
         <td><%=preStr + c.getName()%></td>
         <td><%=c.getPid()%></td>
         <td><%=c.getGrade()%></td>
-        <td><a href="categoryadd.jsp?pid=<%=c.getId()%>" >添加子目录</a> </td>
+        <td>
+            <a href="categoryadd.jsp?pid=<%=c.getId()%>">添加子目录</a>
+            <%
+                if (c.isLeaf()) {
+            %>
+            <a href="productadd.jsp?categoryid=<%=c.getId()%>">添加产品</a>
+            <%
+                }
+            %>
+
+
+        </td>
+
     </tr>
 
     <%

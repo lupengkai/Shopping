@@ -100,7 +100,7 @@ public class CategoryDAO {
             pStmt.setInt(1, c.getPid());
             pStmt.setString(2, c.getName());
             pStmt.setString(3, c.getDescr());
-            pStmt.setInt(4, c.isLeaf() ? 0 : 1);
+            pStmt.setInt(4, 0);
             pStmt.setInt(5, c.getGrade());
             pStmt.executeUpdate();
             stmt = DB.getStmt(conn);

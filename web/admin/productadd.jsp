@@ -1,7 +1,10 @@
 <%@ page import="java.util.DoubleSummaryStatistics" %>
 <%@ page import="com.shopping.Product" %>
 <%@ page import="java.sql.Timestamp" %>
-<%@ page import="com.shopping.ProductMgr" %><%--
+<%@ page import="com.shopping.ProductMgr" %>
+<%@ page import="com.shopping.Category" %>
+<%@ page import="java.util.Iterator" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: tage
   Date: 2/5/16
@@ -12,6 +15,11 @@
 <%@include file="_sessioncheck.jsp" %>
 <%
     request.setCharacterEncoding("GBK");
+    String strCategoryID = request.getParameter("categoryid");
+    int categoryID = 0;
+    if (strCategoryID != null && !strCategoryID.trim().equals("")) {
+        categoryID = Integer.parseInt(strCategoryID);
+    }
     String action = request.getParameter("action");
     if (action != null && action.equals("add")) {
         String name = request.getParameter("name");
@@ -19,6 +27,11 @@
         Double normalPrice = Double.parseDouble(request.getParameter("normalprice"));
         Double memberprice = Double.parseDouble(request.getParameter("memberprice"));
         int categoryId = Integer.parseInt(request.getParameter("categoryid"));
+        Category c = Category.loadById(categoryId);
+        if (!c.isLeaf()) {
+            out.println("非叶子节点");
+            return;
+        }
         Product p = new Product();
         p.setName(name);
         p.setDescr(descr);
@@ -58,7 +71,25 @@
         </tr>
         <tr>
             <td>类别ID：</td>
-            <td><input name="categoryid" type="text"></td>
+            <td>
+                <select name="categoryid">
+                    <option value="0">所有类别</option>
+                    <%
+                        List<Category> categories = Category.getAllCategories();
+                        for (Iterator<Category> it = categories.iterator(); it.hasNext(); ) {
+                            Category c = it.next();
+                            String preStr = "";
+                            for (int i = 1; i < c.getGrade(); i++) {
+                                preStr = preStr + "--";
+                            }
+                    %>
+                    <option value="<%=c.getId()%> " <%=categoryID == c.getId() ? "selected" : ""%>><%=preStr + c.getName()%>
+                    </option>
+                    <%
+                        }
+                    %>
+                </select>
+            </td>
         </tr>
     </table>
     <input type="submit" value="提交">
