@@ -1,4 +1,3 @@
-<%@ page import="java.util.DoubleSummaryStatistics" %>
 <%@ page import="com.shopping.Product" %>
 <%@ page import="java.sql.Timestamp" %>
 <%@ page import="com.shopping.ProductMgr" %>
@@ -47,10 +46,25 @@
 <head>
     <meta http-equiv="CONTENT-TYPE" content="text/html" ; charset="GBK">
     <title></title>
+    <script type="text/javascript">
+        var arrLeaf = new Array();
+        <!--
+        function checkdata() {
+
+            if (arrLeaf[document.form.categoryid.selectedIndex]!='leaf') {
+                alert('不能选择非叶子节点');
+                document.form.categoryid.focus();
+                return false;
+
+            }
+            return true;
+        }
+        -->
+    </script>
 </head>
 <body>
 <center>添加产品</center>
-<form name="form" action="productadd.jsp" method="post">
+<form name="form" action="productadd.jsp" method="post" onsubmit="return checkdata()">
     <input type="hidden" name="action" value="add">
     <table border="1">
         <tr>
@@ -74,7 +88,12 @@
             <td>
                 <select name="categoryid">
                     <option value="0">所有类别</option>
+                    <script type="text/javascript">
+                        arrLeaf[0] = 'notleaf';
+                    </script>
                     <%
+
+                        int index = 1;
                         List<Category> categories = Category.getAllCategories();
                         for (Iterator<Category> it = categories.iterator(); it.hasNext(); ) {
                             Category c = it.next();
@@ -83,9 +102,14 @@
                                 preStr = preStr + "--";
                             }
                     %>
-                    <option value="<%=c.getId()%> " <%=categoryID == c.getId() ? "selected" : ""%>><%=preStr + c.getName()%>
+                    <script type="text/javascript">
+                        arrLeaf[<%=index%>] = '<%=c.isLeaf()? "leaf":"notleaf"%>'
+
+                    </script>
+                    <option value="<%=c.getId()%>" <%=categoryID == c.getId() ? "selected" : ""%>><%=preStr + c.getName()%>
                     </option>
                     <%
+                            index++;
                         }
                     %>
                 </select>

@@ -35,6 +35,16 @@ public class CategoryDAO {
 
     public static void getCategories(List<Category> list, int pid) {
         Connection conn = null;
+        try {
+            conn = DB.getConn();
+            getCategories(conn, list, pid);
+        } finally {
+            DB.closeConn(conn);
+        }
+
+    }
+
+    private static void getCategories(Connection conn, List<Category> list, int pid) {
         ResultSet rs = null;
         try {
             conn = DB.getConn();
@@ -57,7 +67,6 @@ public class CategoryDAO {
             e.printStackTrace();
         } finally {
             DB.closeRs(rs);
-            DB.closeConn(conn);
         }
 
     }

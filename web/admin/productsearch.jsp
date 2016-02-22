@@ -16,24 +16,65 @@
 <%@include file="_sessioncheck.jsp" %>
 <%
     List<Category> categories = Category.getAllCategories();
+    List<Product> products = null;
+    int pageCount = 0;
+    String strCategoryIDQuery = "";
 
+    String keyWord = null;
+    double lowNormalPrice = -1;
+    double highNormalPrice = -1;
+    double lowMemberPrice = -1;
+    double highMemberPrice = -1;
+    String strStartDate = null;
+    String strEndDate = null;
+
+    int pageNo = 1;
+    String strPageNo = request.getParameter("pageno");
+    if (strPageNo != null && !strPageNo.trim().equals("")) {
+        pageNo = Integer.parseInt(strPageNo);
+    }
+
+
+    request.setCharacterEncoding("gbk");
     String action = request.getParameter("action");
-    if (action != null && action.equals("complexsearch")) {
-        int pageNo = 1;
-        String strPageNo = request.getParameter("pageno");
-        if (strPageNo != null && !strPageNo.trim().equals("")) {
-            pageNo = Integer.parseInt(strPageNo);
+
+
+    if (action != null && action.equals("simplesearch2")) {
+        keyWord = request.getParameter("keyword");
+        String[] strCategoryIDs = request.getParameterValues("categoryid");
+        int[] idArray = null;
+
+        if (strCategoryIDs == null || strCategoryIDs.length == 0) {
+            idArray = null;
+        } else {
+            for (int i = 0; i < strCategoryIDs.length; i++) {
+                strCategoryIDQuery += "&categoryid=" + strCategoryIDs[i];
+            }
+            idArray = new int[strCategoryIDs.length];
+            for (int i = 0; i < strCategoryIDs.length; i++) {
+
+                idArray[i] = Integer.parseInt(strCategoryIDs[i]);
+            }
         }
-        String keyWord = request.getParameter("keyword");
-        Double lowNormalPrice = Double.parseDouble(request.getParameter("lownormalprice"));
-        Double highNormalPrice = Double.parseDouble(request.getParameter("highnormalprice"));
-        Double lowMemberPrice = Double.parseDouble(request.getParameter("lowmemberprice"));
-        Double highMemberPrice = Double.parseDouble(request.getParameter("highmemberprice"));
+
+        products = new ArrayList<>();
+
+        pageCount = ProductMgr.getInstance().findProducts(products, idArray, keyWord, -1, -1, -1, -1, null, null, pageNo, 3);
+        out.println(products.size());
+
+    }
+    if (action != null && action.equals("complexsearch")) {
+
+        keyWord = request.getParameter("keyword");
+        lowNormalPrice = Double.parseDouble(request.getParameter("lownormalprice"));
+        highNormalPrice = Double.parseDouble(request.getParameter("highnormalprice"));
+        lowMemberPrice = Double.parseDouble(request.getParameter("lowmemberprice"));
+        highMemberPrice = Double.parseDouble(request.getParameter("highmemberprice"));
 
         int categoryID = Integer.parseInt(request.getParameter("categoryid"));
 
         Timestamp startDate;
-        String strStartDate = request.getParameter("startdate");
+        strStartDate = request.getParameter("startdate");
 
         if (strStartDate == null || strStartDate.trim().equals("")) {
             startDate = null;
@@ -42,7 +83,7 @@
         }
 
         Timestamp endDate;
-        String strEndDate = request.getParameter("enddate");
+        strEndDate = request.getParameter("enddate");
         if (strEndDate == null || strEndDate.trim().equals("")) {
             endDate = null;
         } else {
@@ -57,12 +98,17 @@
             idArray = new int[1];
             idArray[0] = categoryID;
         }
-        List<Product> products = new ArrayList<>();
 
-        int pageCount = ProductMgr.getInstance().findProducts(products, idArray, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, pageNo, 3);
+
+        products = new ArrayList<>();
+
+        pageCount = ProductMgr.getInstance().findProducts(products, idArray, keyWord, lowNormalPrice, highNormalPrice, lowMemberPrice, highMemberPrice, startDate, endDate, pageNo, 3);
         out.println(products.size());
+    }
 
+    if (request.getParameter("action") != null) {
 %>
+
 <center>搜索结果</center>
 <table border="1">
     <tr>
@@ -102,11 +148,9 @@
 <center>
     共<%=pageCount%>页
     &nbsp;
-    <a href="productsearch.jsp?action=<%=action%>&categoryid=<%=categoryID%>&keyword=<%=keyWord%>&lownormalprice=<%=lowNormalPrice%>&highnormalprice=<%=highNormalPrice%>&lowmemberprice=<%=lowMemberPrice%>&highmemberprice=<%=highMemberPrice%>&startdate=<%=strStartDate%>&enddate=<%=strEndDate%>&pageno=<%=pageNo+1%>">下一页</a>
+    <a href="productsearch.jsp?action=<%=action%>&categoryid=<%=strCategoryIDQuery%>&keyword=<%=keyWord%>&lownormalprice=<%=lowNormalPrice%>&highnormalprice=<%=highNormalPrice%>&lowmemberprice=<%=lowMemberPrice%>&highmemberprice=<%=highMemberPrice%>&startdate=<%=strStartDate%>&enddate=<%=strEndDate%>&pageno=<%=pageNo+1%>">下一页</a>
 </center>
-
 <%
-
     }
 %>
 <html>
@@ -154,6 +198,33 @@
     %>
 </select>
     关键字:<input type="text" name="name">
+    <input type="submit" value="搜">
+</form>
+<center>简单搜索2</center>
+<form action="productsearch.jsp" method="get">
+    <input type="hidden" name="action" value="simplesearch2">
+    类别:
+    <%
+        for (Iterator<Category> it = categories.iterator(); it.hasNext(); ) {
+            Category c = it.next();
+            String preStr = "";
+            for (int i = 1; i < c.getGrade(); i++) {
+                preStr = preStr + "--";
+
+            }
+            if (c.isLeaf()) {
+
+    %>
+    <input type="checkbox" name="categoryid" value="<%=c.getId()%>"><%=preStr + c.getName()%><br>
+    <%
+    } else {%>
+    <%=preStr + c.getName()%><br>
+    <%
+            }
+        }
+    %>
+    </input>
+    关键字:<input type="text" name="keyword">
     <input type="submit" value="搜">
 </form>
 <center>复杂搜索</center>
