@@ -1,5 +1,6 @@
 package com.shopping.dao;
 
+import com.shopping.Category;
 import com.shopping.Product;
 import com.shopping.util.DB;
 
@@ -118,6 +119,38 @@ public class ProcuctMySQLDAO implements ProductDAO {
         return pageCount;
     }
 
+    @Override
+    public Product loadByID(int id) {
+        Product p = null;
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "SELECT * from product where id = " + id;
+            rs = DB.executeQuery(conn, sql);
+            if (rs.next()) {
+                p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescr(rs.getString("descr"));
+                p.setNormalPrice(rs.getDouble("normalprice"));
+                p.setMemberPrice(rs.getDouble("memberprice"));
+                p.setPdate(rs.getTimestamp("pdate"));
+                p.setCategoryId(rs.getInt("categoryid"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+
+        return p;
+    }
+
 
     public int findProducts(List<Product> list, int[] catagoryID,
                             String keyWord,
@@ -225,7 +258,30 @@ public class ProcuctMySQLDAO implements ProductDAO {
     }
 
     public boolean updateProduct(Product product) {
-        return false;
+        Connection conn = null;
+        PreparedStatement pStmt = null;
+        conn = DB.getConn();
+        String sql = "update product set name = ?, descr = ?, normalprice = ?, memberprice = ?, categoryid = ? where id = " + product.getId();
+
+        pStmt = DB.prepStmt(conn, sql);
+
+        try {
+            pStmt.setString(1, product.getName());
+            pStmt.setString(2, product.getDescr());
+            pStmt.setDouble(3, product.getNormalPrice());
+            pStmt.setDouble(4, product.getMemberPrice());
+            pStmt.setInt(5, product.getCategoryId());
+            pStmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeStmt(pStmt);
+            DB.closeConn(conn);
+        }
+
+
+        return true;
+
     }
 
     @Override

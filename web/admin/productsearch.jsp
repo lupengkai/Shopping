@@ -65,6 +65,8 @@
     }
     if (action != null && action.equals("complexsearch")) {
 
+//<jsp:forward page="complexsearchresult.jsp"></jsp:forward>
+
         keyWord = request.getParameter("keyword");
         lowNormalPrice = Double.parseDouble(request.getParameter("lownormalprice"));
         highNormalPrice = Double.parseDouble(request.getParameter("highnormalprice"));
