@@ -84,4 +84,8 @@ public class ProductMgr {
     public boolean update(Product p) {
         return dao.updateProduct(p);
     }
+
+    public List<Product> getLatestProducts(int count) {
+        return dao.getLatestProducts(count);
+    }
 }

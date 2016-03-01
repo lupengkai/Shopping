@@ -151,6 +151,36 @@ public class ProcuctMySQLDAO implements ProductDAO {
         return p;
     }
 
+    @Override
+    public List<Product> getLatestProducts(int count) {
+        Connection conn = null;
+        ResultSet rs = null;
+        List<Product> products = new ArrayList<>();
+        String sql = "select * from product order by pdate desc limit 0 , " + count;
+        conn = DB.getConn();
+        rs = DB.executeQuery(conn, sql);
+        try {
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescr(rs.getString("descr"));
+                p.setNormalPrice(rs.getDouble("normalprice"));
+                p.setMemberPrice(rs.getDouble("memberprice"));
+                p.setPdate(rs.getTimestamp("pdate"));
+                p.setCategoryId(rs.getInt("categoryid"));
+                products.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+        return products;
+    }
+
 
     public int findProducts(List<Product> list, int[] catagoryID,
                             String keyWord,
