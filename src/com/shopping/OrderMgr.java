@@ -2,6 +2,8 @@ package com.shopping;
 
 import com.shopping.dao.OrderMySQLDAO;
 
+import java.util.List;
+
 /**
  * Created by tage on 3/3/16.
  */
@@ -31,5 +33,9 @@ public class OrderMgr {
 
     public void saveOrder(SalesOrder salesOrder) {
         dao.saveOrder(salesOrder);
+    }
+
+    public int getOrders(List<SalesOrder> orders, int pageNo, int pageSize) {
+        return dao.getOrders(orders, pageNo, pageSize);
     }
 }

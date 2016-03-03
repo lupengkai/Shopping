@@ -4,6 +4,7 @@ package com.shopping.dao;
 import com.shopping.Cart;
 import com.shopping.CartItem;
 import com.shopping.SalesOrder;
+import com.shopping.User;
 import com.shopping.util.DB;
 
 import java.sql.*;
@@ -68,4 +69,45 @@ public class OrderMySQLDAO {
     }
 
 
+    public int getOrders(List<SalesOrder> orders, int pageNo, int pageSize) {
+        Connection conn = null;
+        ResultSet rsCount = null;
+        ResultSet rs = null;
+        int pageCount = 0;
+
+        try {
+            conn = DB.getConn();
+            rsCount = DB.executeQuery(conn, "select count(*) from salesorder");
+            rsCount.next();
+            pageCount = (rsCount.getInt(1) + pageSize - 1) / pageSize;
+            String sql = "select * from salesorder limit " + (pageNo - 1) * pageSize + " , " + pageSize;
+            rs = DB.executeQuery(conn, sql);
+            while (rs.next()) {
+                SalesOrder so = new SalesOrder();
+                so.setId(rs.getInt("id"));
+                if (rs.getInt("userid") == -1) {
+                    User u = new User();
+                    u.setId(-1);
+                    ;
+                    so.setUser(u);
+                } else {
+                    so.setUser(User.loadById(rs.getInt("userid")));
+                }
+                so.setAddr(rs.getString("addr"));
+                so.setoDate(rs.getTimestamp("odate"));
+                so.setStatus(rs.getInt("status"));
+
+                orders.add(so);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeRs(rsCount);
+            DB.closeConn(conn);
+        }
+
+        return pageCount;
+    }
 }

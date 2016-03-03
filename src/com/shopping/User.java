@@ -93,6 +93,36 @@ public class User {
 
     }
 
+
+    public static User loadById(int id) {
+        User u = null;
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "SELECT * from ruser where id = " + id;
+            rs = DB.executeQuery(conn, sql);
+            if (rs.next()) {
+                u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setPhone(rs.getString("phone"));
+                u.setAddr(rs.getString("addr"));
+                u.setRdate(rs.getTimestamp("rdate"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+
+        return u;
+    }
     public static List<User> getUsers() {
         List<User> list = new ArrayList<>();
         Connection conn = null;
