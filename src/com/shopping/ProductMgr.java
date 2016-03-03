@@ -21,6 +21,8 @@ public class ProductMgr {
         }
     }
 
+    private ProductMgr() {
+    }
     public static ProductMgr getInstance() {
         return pm;
     }

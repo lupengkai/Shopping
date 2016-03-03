@@ -14,5 +14,6 @@
 <a href="productadd.jsp">添加产品</a>
 <a href="productlist.jsp">产品列表</a>
 <a href="productsearch.jsp">产品搜索</a>
+<a href="orderlist.jsp">订单浏览</a>
 </body>
 </html>
