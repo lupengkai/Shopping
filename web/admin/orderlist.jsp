@@ -63,6 +63,7 @@
         <td>
             <a href="orderdetailshow.jsp?id=<%=so.getId()%>">订单明细</a>
             &nbsp;&nbsp;
+            <a href="ordermodify.jsp?id=<%=so.getId()%>">订单修改</a>
 
         </td>
     </tr>
@@ -73,15 +74,15 @@
 </table>
 
 <center>
-    <a href="productlist.jsp?pageNo=1">首页</a>
+    <a href="orderlist.jspt.jsp?pageNo=1">首页</a>
     &nbsp;
-    <a href="productlist.jsp?pageNo=<%=pageNo-1%>"> 上一页</a>
+    <a href="orderlist.jsp.jsp?pageNo=<%=pageNo-1%>"> 上一页</a>
     &nbsp;
     第<%=pageNo%>页&nbsp;共<%=pageCount%>页
     &nbsp;
-    <a href="productlist.jsp?pageNo=<%=pageNo+1%>">下一页</a>
+    <a href="orderlist.jsp?pageNo=<%=pageNo+1%>">下一页</a>
     &nbsp;
-    <a href="productlist.jsp?pageNo=<%=pageCount%>">尾页</a>
+    <a href="orderlist.jsp?pageNo=<%=pageCount%>">尾页</a>
 
 </center>
 

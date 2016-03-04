@@ -1,6 +1,7 @@
 <%@ page import="com.shopping.User" %>
 <%@ page import="com.shopping.SalesOrder" %>
-<%@ page import="java.sql.Timestamp" %><%--
+<%@ page import="java.sql.Timestamp" %>
+<%@ page import="com.shopping.Cart" %><%--
   Created by IntelliJ IDEA.
   User: tage
   Date: 3/3/16
@@ -10,9 +11,10 @@
 <%@ page contentType="text/html;charset=GBK" language="java" pageEncoding="GBK" %>
 
 
-<jsp:useBean id="cart" class="com.shopping.Cart" scope="session"></jsp:useBean>
+<%--<jsp:useBean id="cart" class="com.shopping.Cart" scope="session"></jsp:useBean>--%>
 
 <%
+    Cart cart = (Cart) session.getAttribute("cart");
     if (cart == null) {
         out.print("购物车里没有商品");
         return;

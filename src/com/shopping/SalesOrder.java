@@ -61,7 +61,12 @@ public class SalesOrder {
         this.cart = cart;
     }
 
+
     public void save() {
         OrderMgr.getInstance().saveOrder(this);
+    }
+
+    public void updateStatus() {
+        OrderMgr.getInstance().updateStatus(this);
     }
 }

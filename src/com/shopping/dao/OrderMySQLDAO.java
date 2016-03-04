@@ -1,13 +1,11 @@
 package com.shopping.dao;
 
 
-import com.shopping.Cart;
-import com.shopping.CartItem;
-import com.shopping.SalesOrder;
-import com.shopping.User;
+import com.shopping.*;
 import com.shopping.util.DB;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,7 +86,7 @@ public class OrderMySQLDAO {
                 if (rs.getInt("userid") == -1) {
                     User u = new User();
                     u.setId(-1);
-                    ;
+                    u.setUsername("Guest");
                     so.setUser(u);
                 } else {
                     so.setUser(User.loadById(rs.getInt("userid")));
@@ -109,5 +107,88 @@ public class OrderMySQLDAO {
         }
 
         return pageCount;
+    }
+
+    public SalesOrder loadById(int id) {
+        SalesOrder so = null;
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        String sql = null;
+        try {
+            conn = DB.getConn();
+            sql = "select * from salesorder where id = " + id;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                so = new SalesOrder();
+                so.setId(rs.getInt("id"));
+                if (rs.getInt("userid") == -1) {
+                    User u = new User();
+                    u.setUsername("Guest");
+                    u.setId(-1);
+                    so.setUser(u);
+                } else {
+                    so.setUser(User.loadById(rs.getInt("userid")));
+                }
+                so.setAddr(rs.getString("addr"));
+                so.setoDate(rs.getTimestamp("odate"));
+                so.setStatus(rs.getInt("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeStmt(stmt);
+            DB.closeConn(conn);
+        }
+        return so;
+
+    }
+
+    public List<SalesItem> getSalesItems(SalesOrder order) {
+        List<SalesItem> items = new ArrayList<>();
+        Connection conn = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DB.getConn();
+            String sql = "select * from salesitem where orderid = " + order.getId();
+            rs = DB.executeQuery(conn, sql);
+            while (rs.next()) {
+                SalesItem si = new SalesItem();
+                si.setId(rs.getInt("id"));
+                si.setProduct(ProductMgr.getInstance().loadByID(rs.getInt("productid")));
+                si.setUnitPrice(rs.getDouble("unitprice"));
+                si.setCount(rs.getInt("pcount"));
+                si.setSalesOrder(OrderMgr.getInstance().loadById(rs.getInt("orderid")));
+                items.add(si);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeRs(rs);
+            DB.closeConn(conn);
+        }
+
+        return items;
+    }
+
+    public void updateStatus(SalesOrder salesOrder) {
+        Connection conn = null;
+        Statement stmt = null;
+        try {
+            conn = DB.getConn();
+            stmt = conn.createStatement();
+            String sql = "update salesorder set status = " + salesOrder.getStatus() + " where id = " + salesOrder.getId();
+            stmt.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DB.closeStmt(stmt);
+            DB.closeConn(conn);
+        }
+
     }
 }
