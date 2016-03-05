@@ -41,6 +41,7 @@
 <body>
 <table align="center" border="1">
     <tr>
+        <td></td>
         <td>ID</td>
         <td>Name</td>
         <td>Normal Price</td>
@@ -54,7 +55,9 @@
             Product p = it.next();
     %>
     <tr>
-
+        <td>
+            <img height="20" width="20" src="images/<%=p.getId()%>.jpg">
+        </td>
         <td><%=p.getId()%>
         </td>
         <td><%=p.getName()%>
@@ -71,6 +74,8 @@
             <a href="productdelete.jsp?id=<%=p.getId()%>">É¾</a>
             &nbsp;&nbsp;
             <a href="productmodify.jsp?id=<%=p.getId()%>">¸Ä</a>
+            &nbsp;&nbsp;
+            <a href="productimageup.jsp?id=<%=p.getId()%>">Í¼Æ¬ÉÏ´«</a>
 
         </td>
     </tr>

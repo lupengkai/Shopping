@@ -28,7 +28,7 @@
 <body>
 ∂©µ•∫≈£∫<%=so.getId()%>
 <form name="form" action="ordermodify.jsp" method="post">
-    <input type="hidden" name="action" value="modify">
+    <input type="hidden" name="action" valu e="modify">
     <input type="hidden" name="id" value="<%=id%>">
     <select name="status">
         <option value="0">Œ¥¥¶¿Ì</option>

@@ -9,6 +9,10 @@
         </element>
         <element id="directory" name="lib">
           <element id="file-copy" path="$USER_HOME$/mysql-connector-java-5.1.34/mysql-connector-java-5.1.34-bin.jar" />
+          <element id="file-copy" path="$USER_HOME$/commons-fileupload-1.3.1-bin/lib/commons-fileupload-1.3.1.jar" />
+          <element id="file-copy" path="$USER_HOME$/commons-io-2.4/commons-io-2.4.jar" />
+          <element id="file-copy" path="$USER_HOME$/jfreechart-1.0.19/lib/jcommon-1.0.23.jar" />
+          <element id="file-copy" path="$USER_HOME$/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar" />
         </element>
       </element>
     </root>
