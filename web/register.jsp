@@ -46,7 +46,7 @@
         <tr>
             <td>ÓÃ»§Ãû</td>
             <td>
-                <input type="txt" name="username" size="30" maxlength="10">
+                <input type="txt" name="username" size="30" maxlength="10" onblur="" id=" ">
             </td>
         </tr>
         <tr>
